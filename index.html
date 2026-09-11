@@ -2,26 +2,14 @@
 <html lang="id">
 
 <head>
-
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+    <title>T-Sense WebGIS Realtime</title>
 
-    <title>T-Sense WebGIS</title>
-
-
-    <!-- ============================= -->
-    <!-- LEAFLET CSS -->
-    <!-- ============================= -->
-
+    <!-- LEAFLET -->
     <link rel="stylesheet"
           href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-
-
-    <!-- ============================= -->
-    <!-- STYLE -->
-    <!-- ============================= -->
 
     <style>
 
@@ -33,18 +21,14 @@
             margin: 0;
             font-family: Arial, sans-serif;
             background: #f4f6f8;
-            color: #222;
         }
 
-
-        /* ========================= */
         /* HEADER */
-        /* ========================= */
 
         header {
             background: #0b5ed7;
             color: white;
-            padding: 22px 15px;
+            padding: 20px;
             text-align: center;
         }
 
@@ -55,13 +39,9 @@
 
         header p {
             margin: 8px 0 0;
-            font-size: 15px;
         }
 
-
-        /* ========================= */
         /* CONTAINER */
-        /* ========================= */
 
         .container {
             width: 95%;
@@ -69,63 +49,42 @@
             margin: 20px auto;
         }
 
-
-        /* ========================= */
-        /* CARDS */
-        /* ========================= */
+        /* CARD */
 
         .cards {
             display: grid;
-
-            grid-template-columns:
-                repeat(
-                    auto-fit,
-                    minmax(220px, 1fr)
-                );
-
+            grid-template-columns: repeat(
+                auto-fit,
+                minmax(220px, 1fr)
+            );
             gap: 15px;
-
             margin-bottom: 20px;
         }
 
-
         .card {
             background: white;
-
             padding: 20px;
-
-            border-radius: 12px;
+            border-radius: 10px;
 
             box-shadow:
-                0 2px 8px
-                rgba(0,0,0,0.10);
+                0 2px 8px rgba(0,0,0,0.1);
         }
-
 
         .judul {
             font-size: 14px;
             color: #666;
         }
 
-
         .nilai {
             font-size: 30px;
-
             font-weight: bold;
-
             margin-top: 10px;
         }
-
 
         .satuan {
             color: #666;
             margin-top: 5px;
         }
-
-
-        /* ========================= */
-        /* STATUS */
-        /* ========================= */
 
         .online {
             color: green;
@@ -139,94 +98,42 @@
             color: red;
         }
 
-
-        /* ========================= */
         /* MAP */
-        /* ========================= */
 
         #map {
             height: 500px;
-
             width: 100%;
-
-            border-radius: 12px;
-
+            border-radius: 10px;
             margin-bottom: 20px;
-
-            box-shadow:
-                0 2px 8px
-                rgba(0,0,0,0.10);
         }
 
-
-        /* ========================= */
         /* GRAFIK */
-        /* ========================= */
 
         .grafik {
             background: white;
-
             padding: 20px;
-
-            border-radius: 12px;
+            border-radius: 10px;
 
             box-shadow:
-                0 2px 8px
-                rgba(0,0,0,0.10);
-
-            margin-bottom: 30px;
+                0 2px 8px rgba(0,0,0,0.1);
         }
-
 
         .grafik h2 {
             margin-top: 0;
         }
 
-
         iframe {
             width: 100%;
-
             height: 450px;
-
             border: none;
         }
 
-
-        /* ========================= */
-        /* FOOTER */
-        /* ========================= */
-
-        footer {
-            text-align: center;
-
-            padding: 20px;
-
-            color: #666;
-
-            font-size: 13px;
-        }
-
-
-        /* ========================= */
-        /* MOBILE */
-        /* ========================= */
+        /* RESPONSIVE */
 
         @media (max-width: 600px) {
 
             header h1 {
-                font-size: 23px;
-            }
-
-            header p {
-                font-size: 13px;
-            }
-
-            .container {
-                width: 94%;
-            }
-
-            .nilai {
-                font-size: 26px;
+                font-size: 22px;
             }
 
             #map {
@@ -274,12 +181,12 @@
     <div class="cards">
 
 
-        <!-- JARAK SENSOR -->
+        <!-- JARAK -->
 
         <div class="card">
 
             <div class="judul">
-                Data Field 6
+                Jarak Sensor
             </div>
 
             <div
@@ -297,7 +204,8 @@
         </div>
 
 
-        <!-- WAKTU DATA -->
+
+        <!-- WAKTU -->
 
         <div class="card">
 
@@ -308,13 +216,34 @@
             <div
                 class="nilai"
                 id="waktu"
-                style="font-size: 20px;">
+                style="font-size:20px;">
 
                 -
 
             </div>
 
         </div>
+
+
+
+        <!-- UMUR DATA -->
+
+        <div class="card">
+
+            <div class="judul">
+                Umur Data
+            </div>
+
+            <div
+                class="nilai"
+                id="umurData">
+
+                -
+
+            </div>
+
+        </div>
+
 
 
         <!-- STATUS -->
@@ -330,14 +259,6 @@
                 id="status">
 
                 Menghubungkan...
-
-            </div>
-
-            <div
-                id="statusDetail"
-                style="margin-top:8px;color:#666;font-size:13px;">
-
-                Mengambil data ThingSpeak...
 
             </div>
 
@@ -363,18 +284,11 @@
     <div class="grafik">
 
         <h2>
-            📈 Grafik Data T-Sense
+            Grafik Data T-Sense
         </h2>
 
-        <p style="color:#666;">
-            ThingSpeak Channel 3097834 —
-            Field 6
-        </p>
-
-
         <iframe
-            src="https://thingspeak.com/channels/3097834/charts/6?bgcolor=%23ffffff&color=%23007bff&dynamic=true&results=30"
-            loading="lazy">
+            src="https://thingspeak.com/channels/3097834/charts/6?bgcolor=%23ffffff&color=%23007bff&dynamic=true&results=30">
         </iframe>
 
     </div>
@@ -384,21 +298,11 @@
 
 
 
-<footer>
-
-    T-Sense WebGIS — Monitoring Pasang Surut
-    Muara Sungsang
-
-</footer>
-
-
-
 <!-- ============================= -->
 <!-- LEAFLET JS -->
 <!-- ============================= -->
 
-<script
-    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
 </script>
 
 
@@ -406,11 +310,29 @@
 <script>
 
 
-// ======================================
-// 1. MEMBUAT PETA
-// ======================================
+// ==========================================
+// 1. ELEMENT HTML
+// ==========================================
 
-var map = L.map('map')
+const jarakEl =
+    document.getElementById("jarak");
+
+const waktuEl =
+    document.getElementById("waktu");
+
+const umurEl =
+    document.getElementById("umurData");
+
+const statusEl =
+    document.getElementById("status");
+
+
+
+// ==========================================
+// 2. MEMBUAT PETA
+// ==========================================
+
+const map = L.map("map")
     .setView(
         [-2.38, 104.90],
         10
@@ -418,51 +340,47 @@ var map = L.map('map')
 
 
 
-// ======================================
-// 2. OPENSTREETMAP
-// ======================================
+// ==========================================
+// 3. OPENSTREETMAP
+// ==========================================
 
-var osm = L.tileLayer(
+const osm = L.tileLayer(
 
-    'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
 
     {
-
         attribution:
-            '&copy; OpenStreetMap contributors'
-
+            "&copy; OpenStreetMap contributors"
     }
 
 ).addTo(map);
 
 
 
-// ======================================
-// 3. SATELLITE
-// ======================================
+// ==========================================
+// 4. SATELLITE
+// ==========================================
 
-var satellite = L.tileLayer(
+const satellite = L.tileLayer(
 
-    'https://server.arcgisonline.com/' +
-    'ArcGIS/rest/services/' +
-    'World_Imagery/MapServer/tile/{z}/{y}/{x}',
+    "https://server.arcgisonline.com/" +
+    "ArcGIS/rest/services/" +
+    "World_Imagery/MapServer/tile/{z}/{y}/{x}",
 
     {
-
         attribution:
-            'Tiles &copy; Esri'
-
+            "Tiles &copy; Esri"
     }
 
 );
 
 
 
-// ======================================
-// 4. MARKER T-SENSE
-// ======================================
+// ==========================================
+// 5. MARKER T-SENSE
+// ==========================================
 
-var tsense = L.marker(
+const tsense = L.marker(
 
     [-2.38, 104.90]
 
@@ -470,37 +388,25 @@ var tsense = L.marker(
 
 
 
-// ======================================
-// 5. POPUP
-// ======================================
+// Popup awal
 
 tsense.bindPopup(
 
     "<b>🌊 T-Sense</b><br>" +
-
     "Stasiun Monitoring<br>" +
-
     "Muara Sungsang<br><br>" +
-
-    "Field 6: <b>" +
-
-    "<span id='popupData'>-</span>" +
-
-    " cm</b><br>" +
-
-    "Update: " +
-
-    "<span id='popupTime'>-</span>"
+    "Jarak Sensor: " +
+    "<span id='popupData'>-</span> cm"
 
 );
 
 
 
-// ======================================
+// ==========================================
 // 6. LAYER CONTROL
-// ======================================
+// ==========================================
 
-var baseMaps = {
+const baseMaps = {
 
     "OpenStreetMap": osm,
 
@@ -508,60 +414,45 @@ var baseMaps = {
 
 };
 
-
 L.control.layers(
-
     baseMaps
-
 ).addTo(map);
 
 
 
-// ======================================
+// ==========================================
 // 7. THINGSPEAK
-// ======================================
+// ==========================================
 
 const channelID = "3097834";
 
 
 
-// ======================================
-// 8. MENGAMBIL DATA
-// ======================================
+// ==========================================
+// 8. AMBIL DATA TERBARU
+// ==========================================
 
 function ambilData() {
 
-
     const url =
-
         "https://api.thingspeak.com/" +
-
         "channels/" +
-
         channelID +
-
         "/feeds.json?results=1";
 
 
     fetch(url)
 
-
         .then(response => {
-
-
-            // =========================
-            // CEK RESPONSE
-            // =========================
 
             if (!response.ok) {
 
                 throw new Error(
-                    "HTTP Error: " +
+                    "ThingSpeak HTTP " +
                     response.status
                 );
 
             }
-
 
             return response.json();
 
@@ -571,25 +462,29 @@ function ambilData() {
         .then(data => {
 
 
-            // =========================
-            // CEK FEEDS
-            // =========================
+            // ==================================
+            // CEK DATA
+            // ==================================
 
             if (
                 !data.feeds ||
                 data.feeds.length === 0
             ) {
 
-                throw new Error(
-                    "ThingSpeak tidak memiliki data"
-                );
+                statusEl.innerText =
+                    "NO DATA";
+
+                statusEl.className =
+                    "nilai offline";
+
+                return;
 
             }
 
 
-            // =========================
+            // ==================================
             // DATA TERBARU
-            // =========================
+            // ==================================
 
             const terbaru =
                 data.feeds[0];
@@ -603,184 +498,169 @@ function ambilData() {
                 terbaru.created_at;
 
 
-            // =========================
-            // CEK FIELD 6
-            // =========================
+
+            // ==================================
+            // TAMPILKAN NILAI FIELD 6
+            // ==================================
 
             if (
-                nilai === null ||
-                nilai === undefined ||
-                nilai === ""
+                nilai !== null &&
+                nilai !== undefined &&
+                nilai !== ""
             ) {
 
-                throw new Error(
-                    "Field 6 kosong"
-                );
+                const angka =
+                    parseFloat(nilai);
+
+
+                if (!isNaN(angka)) {
+
+                    jarakEl.innerText =
+                        angka.toFixed(2);
+
+
+                    // Update popup jika ada
+
+                    const popupEl =
+                        document.getElementById(
+                            "popupData"
+                        );
+
+
+                    if (popupEl) {
+
+                        popupEl.innerText =
+                            angka.toFixed(2);
+
+                    }
+
+                }
 
             }
 
 
-            const angka =
-                parseFloat(nilai);
 
+            // ==================================
+            // WAKTU INDONESIA
+            // ==================================
 
-            if (isNaN(angka)) {
-
-                throw new Error(
-                    "Field 6 bukan angka"
-                );
-
-            }
-
-
-            // =========================
-            // TAMPILKAN DATA
-            // =========================
-
-            document.getElementById(
-                "jarak"
-            ).innerText =
-                angka.toFixed(2);
-
-
-
-            // =========================
-            // WAKTU WIB
-            // =========================
-
-            const tanggal =
+            const waktuDate =
                 new Date(waktu);
 
 
             const waktuIndonesia =
-                tanggal.toLocaleString(
+                waktuDate.toLocaleString(
                     "id-ID",
                     {
                         timeZone:
-                            "Asia/Jakarta",
-
-                        day: "2-digit",
-
-                        month: "2-digit",
-
-                        year: "numeric",
-
-                        hour: "2-digit",
-
-                        minute: "2-digit",
-
-                        second: "2-digit"
+                            "Asia/Jakarta"
                     }
                 );
 
 
-            document.getElementById(
-                "waktu"
-            ).innerText =
-                waktuIndonesia + " WIB";
+            waktuEl.innerText =
+                waktuIndonesia;
 
 
 
-            // =========================
+            // ==================================
             // HITUNG UMUR DATA
-            // =========================
+            // ==================================
 
             const sekarang =
                 new Date();
 
 
-            const umurMenit =
-                (
-                    sekarang - tanggal
-                ) / 1000 / 60;
+            const selisihMs =
+                sekarang - waktuDate;
 
 
-
-            // =========================
-            // STATUS
-            // =========================
-
-            const status =
-                document.getElementById(
-                    "status"
-                );
-
-            const detail =
-                document.getElementById(
-                    "statusDetail"
+            const selisihMenit =
+                Math.floor(
+                    selisihMs /
+                    (1000 * 60)
                 );
 
 
-            if (umurMenit <= 30) {
+            if (
+                selisihMenit < 60
+            ) {
+
+                umurEl.innerText =
+                    selisihMenit +
+                    " menit";
+
+            }
+            else {
+
+                const jam =
+                    Math.floor(
+                        selisihMenit / 60
+                    );
+
+                const menit =
+                    selisihMenit % 60;
 
 
-                status.innerText =
-                    "ONLINE";
-
-                status.className =
-                    "nilai online";
-
-                detail.innerText =
-                    "Data terbaru berhasil diterima";
-
+                umurEl.innerText =
+                    jam +
+                    " jam " +
+                    menit +
+                    " menit";
 
             }
 
-            else if (umurMenit <= 120) {
 
 
-                status.innerText =
+            // ==================================
+            // STATUS
+            //
+            // Karena upload sekitar 1 jam sekali:
+            //
+            // <= 70 menit  = ONLINE
+            // <= 120 menit = DELAYED
+            // > 120 menit = DATA LAMA
+            // ==================================
+
+            if (
+                selisihMenit <= 70
+            ) {
+
+                statusEl.innerText =
+                    "ONLINE";
+
+                statusEl.className =
+                    "nilai online";
+
+            }
+
+            else if (
+                selisihMenit <= 120
+            ) {
+
+                statusEl.innerText =
                     "DELAYED";
 
-                status.className =
+                statusEl.className =
                     "nilai delayed";
-
-                detail.innerText =
-                    "Data terakhir " +
-                    Math.round(umurMenit) +
-                    " menit yang lalu";
-
 
             }
 
             else {
 
-
-                status.innerText =
+                statusEl.innerText =
                     "DATA LAMA";
 
-                status.className =
+                statusEl.className =
                     "nilai offline";
-
-                detail.innerText =
-                    "Data terakhir " +
-                    Math.round(umurMenit) +
-                    " menit yang lalu";
 
             }
 
 
 
-            // =========================
-            // UPDATE POPUP
-            // =========================
-
-            document.getElementById(
-                "popupData"
-            ).innerText =
-                angka.toFixed(2);
-
-
-            document.getElementById(
-                "popupTime"
-            ).innerText =
-                waktuIndonesia + " WIB";
-
-
-
-            // =========================
+            // ==================================
             // CONSOLE
-            // =========================
+            // ==================================
 
             console.log(
                 "Data T-Sense:",
@@ -790,35 +670,24 @@ function ambilData() {
         })
 
 
-        // =================================
-        // ERROR
-        // =================================
+        // ==================================
+        // JIKA API ERROR
+        // ==================================
 
         .catch(error => {
 
-
             console.error(
-                "T-Sense Error:",
+                "Error ThingSpeak:",
                 error
             );
 
 
-            document.getElementById(
-                "status"
-            ).innerText =
+            statusEl.innerText =
                 "OFFLINE";
 
 
-            document.getElementById(
-                "status"
-            ).className =
+            statusEl.className =
                 "nilai offline";
-
-
-            document.getElementById(
-                "statusDetail"
-            ).innerText =
-                error.message;
 
         });
 
@@ -826,24 +695,21 @@ function ambilData() {
 
 
 
-// ======================================
-// 9. JALANKAN PERTAMA KALI
-// ======================================
+// ==========================================
+// 9. JALANKAN SAAT WEBSITE DIBUKA
+// ==========================================
 
 ambilData();
 
 
 
-// ======================================
-// 10. UPDATE SETIAP 15 DETIK
-// ======================================
+// ==========================================
+// 10. CEK SETIAP 15 DETIK
+// ==========================================
 
 setInterval(
-
     ambilData,
-
     15000
-
 );
 
 
