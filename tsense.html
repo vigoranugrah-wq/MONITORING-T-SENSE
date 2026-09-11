@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>T-Sense WebGIS</title>
+
+
+    <!-- ============================= -->
+    <!-- LEAFLET CSS -->
+    <!-- ============================= -->
+
+    <link rel="stylesheet"
+          href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+
+
+    <!-- ============================= -->
+    <!-- STYLE -->
+    <!-- ============================= -->
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            color: #222;
+        }
+
+
+        /* ========================= */
+        /* HEADER */
+        /* ========================= */
+
+        header {
+            background: #0b5ed7;
+            color: white;
+            padding: 22px 15px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        header p {
+            margin: 8px 0 0;
+            font-size: 15px;
+        }
+
+
+        /* ========================= */
+        /* CONTAINER */
+        /* ========================= */
+
+        .container {
+            width: 95%;
+            max-width: 1200px;
+            margin: 20px auto;
+        }
+
+
+        /* ========================= */
+        /* CARDS */
+        /* ========================= */
+
+        .cards {
+            display: grid;
+
+            grid-template-columns:
+                repeat(
+                    auto-fit,
+                    minmax(220px, 1fr)
+                );
+
+            gap: 15px;
+
+            margin-bottom: 20px;
+        }
+
+
+        .card {
+            background: white;
+
+            padding: 20px;
+
+            border-radius: 12px;
+
+            box-shadow:
+                0 2px 8px
+                rgba(0,0,0,0.10);
+        }
+
+
+        .judul {
+            font-size: 14px;
+            color: #666;
+        }
+
+
+        .nilai {
+            font-size: 30px;
+
+            font-weight: bold;
+
+            margin-top: 10px;
+        }
+
+
+        .satuan {
+            color: #666;
+            margin-top: 5px;
+        }
+
+
+        /* ========================= */
+        /* STATUS */
+        /* ========================= */
+
+        .online {
+            color: green;
+        }
+
+        .delayed {
+            color: orange;
+        }
+
+        .offline {
+            color: red;
+        }
+
+
+        /* ========================= */
+        /* MAP */
+        /* ========================= */
+
+        #map {
+            height: 500px;
+
+            width: 100%;
+
+            border-radius: 12px;
+
+            margin-bottom: 20px;
+
+            box-shadow:
+                0 2px 8px
+                rgba(0,0,0,0.10);
+        }
+
+
+        /* ========================= */
+        /* GRAFIK */
+        /* ========================= */
+
+        .grafik {
+            background: white;
+
+            padding: 20px;
+
+            border-radius: 12px;
+
+            box-shadow:
+                0 2px 8px
+                rgba(0,0,0,0.10);
+
+            margin-bottom: 30px;
+        }
+
+
+        .grafik h2 {
+            margin-top: 0;
+        }
+
+
+        iframe {
+            width: 100%;
+
+            height: 450px;
+
+            border: none;
+        }
+
+
+        /* ========================= */
+        /* FOOTER */
+        /* ========================= */
+
+        footer {
+            text-align: center;
+
+            padding: 20px;
+
+            color: #666;
+
+            font-size: 13px;
+        }
+
+
+        /* ========================= */
+        /* MOBILE */
+        /* ========================= */
+
+        @media (max-width: 600px) {
+
+            header h1 {
+                font-size: 23px;
+            }
+
+            header p {
+                font-size: 13px;
+            }
+
+            .container {
+                width: 94%;
+            }
+
+            .nilai {
+                font-size: 26px;
+            }
+
+            #map {
+                height: 400px;
+            }
+
+            iframe {
+                height: 350px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- ============================= -->
+<!-- HEADER -->
+<!-- ============================= -->
+
+<header>
+
+    <h1>🌊 T-Sense WebGIS</h1>
+
+    <p>
+        Monitoring Pasang Surut Berbasis
+        Internet of Things
+    </p>
+
+</header>
+
+
+
+<div class="container">
+
+
+    <!-- ============================= -->
+    <!-- DATA REALTIME -->
+    <!-- ============================= -->
+
+    <div class="cards">
+
+
+        <!-- JARAK SENSOR -->
+
+        <div class="card">
+
+            <div class="judul">
+                Data Field 6
+            </div>
+
+            <div
+                class="nilai"
+                id="jarak">
+
+                -
+
+            </div>
+
+            <div class="satuan">
+                cm
+            </div>
+
+        </div>
+
+
+        <!-- WAKTU DATA -->
+
+        <div class="card">
+
+            <div class="judul">
+                Waktu Data Terakhir
+            </div>
+
+            <div
+                class="nilai"
+                id="waktu"
+                style="font-size: 20px;">
+
+                -
+
+            </div>
+
+        </div>
+
+
+        <!-- STATUS -->
+
+        <div class="card">
+
+            <div class="judul">
+                Status T-Sense
+            </div>
+
+            <div
+                class="nilai"
+                id="status">
+
+                Menghubungkan...
+
+            </div>
+
+            <div
+                id="statusDetail"
+                style="margin-top:8px;color:#666;font-size:13px;">
+
+                Mengambil data ThingSpeak...
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- ============================= -->
+    <!-- MAP -->
+    <!-- ============================= -->
+
+    <div id="map"></div>
+
+
+
+    <!-- ============================= -->
+    <!-- GRAFIK -->
+    <!-- ============================= -->
+
+    <div class="grafik">
+
+        <h2>
+            📈 Grafik Data T-Sense
+        </h2>
+
+        <p style="color:#666;">
+            ThingSpeak Channel 3097834 —
+            Field 6
+        </p>
+
+
+        <iframe
+            src="https://thingspeak.com/channels/3097834/charts/6?bgcolor=%23ffffff&color=%23007bff&dynamic=true&results=30"
+            loading="lazy">
+        </iframe>
+
+    </div>
+
+
+</div>
+
+
+
+<footer>
+
+    T-Sense WebGIS — Monitoring Pasang Surut
+    Muara Sungsang
+
+</footer>
+
+
+
+<!-- ============================= -->
+<!-- LEAFLET JS -->
+<!-- ============================= -->
+
+<script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+</script>
+
+
+
+<script>
+
+
+// ======================================
+// 1. MEMBUAT PETA
+// ======================================
+
+var map = L.map('map')
+    .setView(
+        [-2.38, 104.90],
+        10
+    );
+
+
+
+// ======================================
+// 2. OPENSTREETMAP
+// ======================================
+
+var osm = L.tileLayer(
+
+    'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+
+    {
+
+        attribution:
+            '&copy; OpenStreetMap contributors'
+
+    }
+
+).addTo(map);
+
+
+
+// ======================================
+// 3. SATELLITE
+// ======================================
+
+var satellite = L.tileLayer(
+
+    'https://server.arcgisonline.com/' +
+    'ArcGIS/rest/services/' +
+    'World_Imagery/MapServer/tile/{z}/{y}/{x}',
+
+    {
+
+        attribution:
+            'Tiles &copy; Esri'
+
+    }
+
+);
+
+
+
+// ======================================
+// 4. MARKER T-SENSE
+// ======================================
+
+var tsense = L.marker(
+
+    [-2.38, 104.90]
+
+).addTo(map);
+
+
+
+// ======================================
+// 5. POPUP
+// ======================================
+
+tsense.bindPopup(
+
+    "<b>🌊 T-Sense</b><br>" +
+
+    "Stasiun Monitoring<br>" +
+
+    "Muara Sungsang<br><br>" +
+
+    "Field 6: <b>" +
+
+    "<span id='popupData'>-</span>" +
+
+    " cm</b><br>" +
+
+    "Update: " +
+
+    "<span id='popupTime'>-</span>"
+
+);
+
+
+
+// ======================================
+// 6. LAYER CONTROL
+// ======================================
+
+var baseMaps = {
+
+    "OpenStreetMap": osm,
+
+    "Satellite": satellite
+
+};
+
+
+L.control.layers(
+
+    baseMaps
+
+).addTo(map);
+
+
+
+// ======================================
+// 7. THINGSPEAK
+// ======================================
+
+const channelID = "3097834";
+
+
+
+// ======================================
+// 8. MENGAMBIL DATA
+// ======================================
+
+function ambilData() {
+
+
+    const url =
+
+        "https://api.thingspeak.com/" +
+
+        "channels/" +
+
+        channelID +
+
+        "/feeds.json?results=1";
+
+
+    fetch(url)
+
+
+        .then(response => {
+
+
+            // =========================
+            // CEK RESPONSE
+            // =========================
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "HTTP Error: " +
+                    response.status
+                );
+
+            }
+
+
+            return response.json();
+
+        })
+
+
+        .then(data => {
+
+
+            // =========================
+            // CEK FEEDS
+            // =========================
+
+            if (
+                !data.feeds ||
+                data.feeds.length === 0
+            ) {
+
+                throw new Error(
+                    "ThingSpeak tidak memiliki data"
+                );
+
+            }
+
+
+            // =========================
+            // DATA TERBARU
+            // =========================
+
+            const terbaru =
+                data.feeds[0];
+
+
+            const nilai =
+                terbaru.field6;
+
+
+            const waktu =
+                terbaru.created_at;
+
+
+            // =========================
+            // CEK FIELD 6
+            // =========================
+
+            if (
+                nilai === null ||
+                nilai === undefined ||
+                nilai === ""
+            ) {
+
+                throw new Error(
+                    "Field 6 kosong"
+                );
+
+            }
+
+
+            const angka =
+                parseFloat(nilai);
+
+
+            if (isNaN(angka)) {
+
+                throw new Error(
+                    "Field 6 bukan angka"
+                );
+
+            }
+
+
+            // =========================
+            // TAMPILKAN DATA
+            // =========================
+
+            document.getElementById(
+                "jarak"
+            ).innerText =
+                angka.toFixed(2);
+
+
+
+            // =========================
+            // WAKTU WIB
+            // =========================
+
+            const tanggal =
+                new Date(waktu);
+
+
+            const waktuIndonesia =
+                tanggal.toLocaleString(
+                    "id-ID",
+                    {
+                        timeZone:
+                            "Asia/Jakarta",
+
+                        day: "2-digit",
+
+                        month: "2-digit",
+
+                        year: "numeric",
+
+                        hour: "2-digit",
+
+                        minute: "2-digit",
+
+                        second: "2-digit"
+                    }
+                );
+
+
+            document.getElementById(
+                "waktu"
+            ).innerText =
+                waktuIndonesia + " WIB";
+
+
+
+            // =========================
+            // HITUNG UMUR DATA
+            // =========================
+
+            const sekarang =
+                new Date();
+
+
+            const umurMenit =
+                (
+                    sekarang - tanggal
+                ) / 1000 / 60;
+
+
+
+            // =========================
+            // STATUS
+            // =========================
+
+            const status =
+                document.getElementById(
+                    "status"
+                );
+
+            const detail =
+                document.getElementById(
+                    "statusDetail"
+                );
+
+
+            if (umurMenit <= 30) {
+
+
+                status.innerText =
+                    "ONLINE";
+
+                status.className =
+                    "nilai online";
+
+                detail.innerText =
+                    "Data terbaru berhasil diterima";
+
+
+            }
+
+            else if (umurMenit <= 120) {
+
+
+                status.innerText =
+                    "DELAYED";
+
+                status.className =
+                    "nilai delayed";
+
+                detail.innerText =
+                    "Data terakhir " +
+                    Math.round(umurMenit) +
+                    " menit yang lalu";
+
+
+            }
+
+            else {
+
+
+                status.innerText =
+                    "DATA LAMA";
+
+                status.className =
+                    "nilai offline";
+
+                detail.innerText =
+                    "Data terakhir " +
+                    Math.round(umurMenit) +
+                    " menit yang lalu";
+
+            }
+
+
+
+            // =========================
+            // UPDATE POPUP
+            // =========================
+
+            document.getElementById(
+                "popupData"
+            ).innerText =
+                angka.toFixed(2);
+
+
+            document.getElementById(
+                "popupTime"
+            ).innerText =
+                waktuIndonesia + " WIB";
+
+
+
+            // =========================
+            // CONSOLE
+            // =========================
+
+            console.log(
+                "Data T-Sense:",
+                terbaru
+            );
+
+        })
+
+
+        // =================================
+        // ERROR
+        // =================================
+
+        .catch(error => {
+
+
+            console.error(
+                "T-Sense Error:",
+                error
+            );
+
+
+            document.getElementById(
+                "status"
+            ).innerText =
+                "OFFLINE";
+
+
+            document.getElementById(
+                "status"
+            ).className =
+                "nilai offline";
+
+
+            document.getElementById(
+                "statusDetail"
+            ).innerText =
+                error.message;
+
+        });
+
+}
+
+
+
+// ======================================
+// 9. JALANKAN PERTAMA KALI
+// ======================================
+
+ambilData();
+
+
+
+// ======================================
+// 10. UPDATE SETIAP 15 DETIK
+// ======================================
+
+setInterval(
+
+    ambilData,
+
+    15000
+
+);
+
+
+</script>
+
+
+</body>
+
+</html>
